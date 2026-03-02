@@ -47,6 +47,16 @@ with st.sidebar:
             help="Upload a CSV containing at least: id, sequence. Additional columns are ignored."
         )
 
+    enable_3d = st.checkbox(
+        "Enable 3D portfolio plot (Agg/Scale/Stab)",
+        value=True,
+        help="Requires plotly. If disabled or plotly not installed, a 2D fallback plot is shown."
+    )
+    if enable_3d and not PLOTLY_OK:
+        st.warning("Plotly not installed → 3D disabled. Run: `pip install plotly`")
+
+    run_btn = st.button("Evaluate", type="primary", help="Compute risk profiles for the current dataset.")
+    
     st.divider()
 
     cfg = RiskConfig()
@@ -98,18 +108,6 @@ with st.sidebar:
         0.0, 100.0, float(cfg.major_risk_threshold), 1.0,
         help="If any major axis (Agg/Scale/Stab) ≥ this value, candidate is flagged as major-risk. Recommended: 80."
     )
-
-    st.divider()
-    st.subheader("View")
-    enable_3d = st.checkbox(
-        "Enable 3D portfolio plot (Agg/Scale/Stab)",
-        value=True,
-        help="Requires plotly. If disabled or plotly not installed, a 2D fallback plot is shown."
-    )
-    if enable_3d and not PLOTLY_OK:
-        st.warning("Plotly not installed → 3D disabled. Run: `pip install plotly`")
-
-    run_btn = st.button("Evaluate", type="primary", help="Compute risk profiles for the current dataset.")
 
 
 # -----------------------------
@@ -492,7 +490,7 @@ pick = st.selectbox("Select candidate", ids, index=default_idx)
 # show a small indicator if selection came from portfolio
 if "selected_id" in st.session_state:
     st.caption(f"Selected from portfolio: **{st.session_state['selected_id']}**")
-    
+
 row = scored[scored["id"] == pick].iloc[0]
 
 # --- pull the original sequence (from input df)
