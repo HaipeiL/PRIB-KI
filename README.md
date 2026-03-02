@@ -40,7 +40,7 @@ Python 3.12.1
 Install required packages:
 
 ```bash
-pip install pandas numpy requests scikit-learn streamlit matplotlib
+pip install pandas numpy requests scikit-learn streamlit matplotlib plotly
 ```
 
 ---
