@@ -54,9 +54,9 @@ pip install pandas numpy requests scikit-learn streamlit matplotlib plotly
 
 ---
 ## References
-Chen, Leo Tianlai, et al. "Target sequence-conditioned design of peptide binders using masked language modeling." Nature Biotechnology (2025): 1-9.
-Sappington, Isaac, et al. "Improved protein binder design using β-pairing targeted RFdiffusion." Nature Communications (2026).
-Didi, Kieran, et al. "Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute." arXiv preprint arXiv:2603.27950 (2026).
+-Chen, Leo Tianlai, et al. "Target sequence-conditioned design of peptide binders using masked language modeling." Nature Biotechnology (2025): 1-9.
+-Sappington, Isaac, et al. "Improved protein binder design using β-pairing targeted RFdiffusion." Nature Communications (2026).
+-Didi, Kieran, et al. "Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute." arXiv preprint arXiv:2603.27950 (2026).
 
 ---
 ## Contact
