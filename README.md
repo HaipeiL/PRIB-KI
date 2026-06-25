@@ -1,73 +1,133 @@
-# PRIB-KI-demo
-Developability Assessment & Failure-oriented protein reliability screening (demo version PRIB-2.0)
+# PRIB-KI
 
-## Overview
+Failure-oriented protein developability screening.
 
-PRIB-KI (Perturbation-Aware Reliability Inference for Biotechnological Proteins) is an AI-driven framework designed to assess protein developability and industrial reliability under stress-relevant conditions.
+Maintained by **PRIB-KI Lab**.
 
-This demo version (PRIB-2.0) demonstrates:
+## Status
 
-- Feature extraction from protein sequences  
-- Developability-related descriptor calculation  
-- Failure-oriented screening logic  
-- Machine learning–based reliability scoring  
-- Interactive visualization interface (Streamlit)
+PRIB-KI is a research prototype for early-stage protein candidate prioritization. The current implementation focuses on sequence-derived descriptors, heuristic failure-mode features, relative risk aggregation, and interactive batch review.
 
-The goal of PRIB-KI is to bridge the gap between laboratory stability prediction and real-world industrial robustness requirements.
+The current release is not an experimentally validated predictor of clinical or manufacturing failure. Scores are relative screening indices and should be used to support, not replace, wet-lab developability testing.
 
-## Core Concept
+## Current capabilities
 
-Instead of focusing solely on intrinsic thermodynamic stability, PRIB-KI evaluates proteins from a **failure-risk perspective**.
+- protein sequence validation;
+- physicochemical descriptor calculation;
+- motif-based liability features;
+- failure-oriented risk axes;
+- configurable score aggregation;
+- batch ranking and filtering;
+- Streamlit-based review interface;
+- deterministic demonstration dataset generation.
 
-Key evaluation dimensions include:
+## Repository layout
 
-- Aggregation-related risk indicators  
-- Physicochemical stability descriptors  
-- Stress-sensitive sequence motifs  
-- Developability heuristics  
-- ML-based reliability inference  
-
-The output is an interpretable reliability score intended for early-stage screening.
-
-## System Requirements
-Python Version:
-```bash
-Python 3.12.1
+```text
+.
+├── app.py                  # Streamlit application
+├── risk_engine.py          # feature and scoring implementation
+├── download_data.py        # source data retrieval
+├── build_demo_set.py       # deterministic demo dataset builder
+├── data/                   # demonstration data
+└── docs/
+    ├── methodology.md      # scientific and computational assumptions
+    ├── validation.md       # benchmark and prospective validation plan
+    ├── roadmap.md          # engineering milestones
+    └── data.md             # data provenance and usage limits
 ```
 
-## Dependencies
+## Method summary
 
-Install required packages:
-
-```bash
-pip install pandas numpy requests scikit-learn streamlit matplotlib plotly
+```text
+sequence input
+    -> input validation
+    -> descriptor calculation
+    -> failure-mode features
+    -> risk aggregation
+    -> candidate ranking
+    -> review / retain / deprioritize
 ```
 
----
+The project follows a failure-oriented approach: a plausible structure is not assumed to imply robustness under expression, purification, formulation, storage, concentration, agitation, or other non-ideal conditions.
 
-## Intended Use Cases
+See [`docs/methodology.md`](docs/methodology.md) for the current assumptions and implementation boundaries.
 
-- Early-stage enzyme screening  
-- Protein developability assessment  
-- Industrial robustness pre-evaluation  
-- Research validation of reliability hypotheses  
+## Installation
 
----
+Python 3.12 is recommended.
+
+```bash
+python -m venv .venv
+```
+
+Activate the environment and install the dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+## Demo data
+
+Download the public source file and build the deterministic demo set:
+
+```bash
+python download_data.py
+python build_demo_set.py
+```
+
+The generated demo contains public therapeutic-antibody sequences and synthetic stress variants. Synthetic variants are software test cases, not experimental negative labels. See [`docs/data.md`](docs/data.md).
+
+## Run
+
+```bash
+streamlit run app.py
+```
+
+## Validation status
+
+The repository currently demonstrates workflow execution and controlled descriptor stratification.
+
+Before quantitative performance claims are made, the system requires:
+
+- endpoint-specific experimental benchmark data;
+- sequence- or family-aware train/test separation;
+- comparison with simple physicochemical baselines;
+- uncertainty and applicability-domain analysis;
+- blinded prospective validation.
+
+The planned evaluation procedure is documented in [`docs/validation.md`](docs/validation.md).
+
+## Intended use
+
+Appropriate uses:
+
+- research prototyping;
+- early candidate triage;
+- descriptor and hypothesis exploration;
+- workflow demonstrations;
+- planning of experimental validation.
+
+Out-of-scope uses:
+
+- clinical decisions;
+- regulatory submissions;
+- manufacturing release decisions;
+- absolute probability of development failure;
+- replacement of experimental assays.
+
+## Development roadmap
+
+See [`docs/roadmap.md`](docs/roadmap.md).
+
 ## References
-Chen, Leo Tianlai, et al. "Target sequence-conditioned design of peptide binders using masked language modeling." Nature Biotechnology (2025): 1-9.
 
-Sappington, Isaac, et al. "Improved protein binder design using β-pairing targeted RFdiffusion." Nature Communications (2026).
+- Chen, L. T. et al. Target sequence-conditioned design of peptide binders using masked language modeling. *Nature Biotechnology* (2025).
+- Sappington, I. et al. Improved protein binder design using beta-pairing targeted RFdiffusion. *Nature Communications* (2026).
+- Didi, K. et al. Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute. arXiv:2603.27950 (2026).
 
-Didi, Kieran, et al. "Scaling Atomistic Protein Binder Design with Generative Pretraining and Test-Time Compute." arXiv preprint arXiv:2603.27950 (2026).
-
----
 ## Contact
 
-Dr. H. Liu
-Email:
-```bash
+PRIB-KI Lab  
+Dr. Haipei Liu  
 haipei.thu@gmail.com
-```
-
----
-
