@@ -1,8 +1,7 @@
-streamlit
 matplotlib
-pandas 
-numpy 
-requests 
-scikit-learn 
-streamlit 
+numpy
+pandas
 plotly
+requests
+scikit-learn
+streamlit
