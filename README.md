@@ -4,6 +4,12 @@ Failure-oriented protein developability screening.
 
 Maintained by **PRIB-KI Lab**.
 
+Try at:
+https://prib-ki.streamlit.app/
+
+Intro video (03:36):
+https://youtu.be/2hRn8kXBsRI
+
 ## Status
 
 PRIB-KI is a research prototype for early-stage protein candidate prioritization. The current implementation focuses on sequence-derived descriptors, heuristic failure-mode features, relative risk aggregation, and interactive batch review.
