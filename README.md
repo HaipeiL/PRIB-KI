@@ -152,22 +152,75 @@ The current sequence-only implementation approximates early risk signals such as
 
 The next scientific step is to connect risk modules to measured endpoints such as expression yield, SEC monomer percentage, nanoDSF/DSF stability, aggregation onset, solubility, self-interaction, or viscosity.
 
-## TargetTrack historical-data foundation
+## Completed data integration: TargetTrack historical wet-lab funnel
 
-The repository now contains a data-governed, CPU-only foundation for analysing
-the historical TargetTrack structural-genomics archive. A locally verified
-2017 source-snapshot run exercises its XML parser and complete status map; raw
-archives and derived row-level records remain ignored by Git. The code adds an
-explicit failure taxonomy, trial/construct and target-level funnels,
-censoring-aware progression reporting, reproducible source verification, and
-synthetic tests.
+PRIB-KI has completed its first reproducible historical wet-lab data
+integration using the Protein Structure Initiative's final 2017
+[TargetTrack archive](https://doi.org/10.5281/zenodo.821654). The official
+archive is downloaded locally, checked against its published MD5, inspected,
+and streamed into analysis-ready experimental-history records. Raw archives
+and row-level derived data remain excluded from Git.
 
-This work does not alter the Streamlit demonstrator or its rankings. It is an
-independent retrospective evidence layer: TargetTrack stopped records are not
-automatically molecular failures, and resulting values must be described as
-historical structural-genomics priors rather than industrial success
-probabilities. See [the TargetTrack workflow](docs/targettrack_wetlab_failure_funnel.md)
-and [the attribution notice](THIRD_PARTY_DATA.md).
+### Dataset scope
+
+| Unit | Local verified snapshot |
+|---|---:|
+| protein targets | 335,771 |
+| trial / construct units | 961,548 |
+| historical status events | 3,783,070 |
+| unmapped source statuses | 0 |
+
+### What the funnel records
+
+```text
+selected
+  -> cloned
+  -> expressed
+  -> soluble
+  -> purified
+  -> crystallized
+  -> diffraction-quality crystals
+  -> structure determined
+  -> deposited
+```
+
+For every trial/construct and target, the pipeline can identify the highest
+observed stage, later successful retries, inferred prerequisite stages, and
+whether a record ended in an explicit technical failure, nontechnical stop,
+unknown stop, or censoring. This provides a historical reference for the
+sequence of experimental work, not merely a count of finished structures.
+
+### What this contributes to PRIB
+
+This integration establishes the data workflow that PRIB needs when connecting
+AI candidate prioritisation to wet-lab execution:
+
+```text
+candidate selected
+  -> experimental stage recorded
+  -> outcome and stop reason classified
+  -> historical or partner evidence reviewed
+  -> next experiment and next design round prioritised
+```
+
+It supplies a reusable schema, provenance record, stage map, stop taxonomy,
+trial-versus-target aggregation, and auditable funnel reporting. Future
+partner datasets can use the same structure with richer fields such as assay
+conditions, expression yield, SEC, solubility, stability and explicit failure
+reasons.
+
+### Important boundary
+
+The TargetTrack snapshot has 173,989 terminal trial records labelled `work stopped`,
+but no explicit technical-failure category in the parsed status
+history. They are therefore retained as unknown outcomes; the code does not
+turn them into molecular failures or report a resolved-failure probability.
+This is a historical structural-genomics workflow reference, not a validated
+industrial developability model and it does not alter the Streamlit
+demonstrator or its rankings.
+
+See [the TargetTrack workflow](docs/targettrack_wetlab_failure_funnel.md) and
+[the attribution notice](THIRD_PARTY_DATA.md).
 
 ## Demo data
 
