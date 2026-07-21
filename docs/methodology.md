@@ -24,6 +24,52 @@ sequence input
 
 The central assumption is that a structurally plausible protein can still carry condition-dependent liabilities that become relevant during expression, purification, formulation, storage, concentration, transport, or repeated handling.
 
+## AI framework
+
+PRIB-KI uses AI as a physical reliability layer rather than as an autonomous protein generator. The intended method has two stages.
+
+Stage A builds a **protein physical reliability landscape**:
+
+```text
+amino-acid sequence
+    -> protein language-model embedding
+    -> optional structure and condition augmentation
+    -> learned physical-risk directions
+    -> danger-zone and applicability-domain rules
+    -> candidate reliability ranking
+```
+
+Stage B builds a **lab-in-the-loop physical AI autopilot**:
+
+```text
+current risk landscape
+    -> next experiment selection
+    -> frozen wet-lab prediction
+    -> assay readout ingestion
+    -> calibration update
+    -> next-round reliability map
+```
+
+This makes the project part of three overlapping categories:
+
+- **Drug x AI:** a candidate-prioritization layer between computational design and developability experiments.
+- **Physical AI:** a hybrid model that keeps biophysical failure mechanisms visible inside the scoring logic.
+- **AI for life science:** a design-test-learn workflow where model predictions are updated only after traceable experimental feedback.
+
+The full architecture and technical route are described in [`ai_framework.md`](ai_framework.md).
+
+## AI methods used in the target system
+
+| Method | Role in PRIB-KI |
+|---|---|
+| Protein language-model embedding | Maps amino-acid sequences into an AI-learned protein landscape |
+| Structure and condition augmentation | Adds geometry and stress context to the candidate representation |
+| Risk-direction learning | Learns aggregation, stability, expression, SEC, solubility, or self-interaction directions from endpoint labels |
+| Failure-anchor retrieval | Compares new candidates against experimentally stable or fragile anchors |
+| Applicability-domain detection | Identifies candidates outside validated evidence rather than forcing a confident score |
+| Active learning and Bayesian experimental design | Selects the next candidate panel or stress condition that should most improve the model |
+| Model calibration | Updates risk estimates after frozen predictions are compared with wet-lab readouts |
+
 ## Reliability dimensions
 
 The project currently separates the following concepts:
@@ -70,21 +116,49 @@ The current codebase provides:
 - physicochemical descriptor calculation;
 - motif-based liability features;
 - relative risk-axis calculation;
+- AI-weighted pseudo-target mapping for demonstrator behavior;
 - configurable score aggregation;
 - batch ranking and visualization.
 
 The current score is a relative screening index. It must not be interpreted as an experimentally calibrated probability.
+
+## Historical progression priors
+
+The TargetTrack data module adds a separate, descriptive retrospective layer
+for historical structural-genomics workflows. It represents a progression
+history as events, separates direct observations from inferred prerequisites,
+and keeps technical failures distinct from nontechnical and unknown project
+stops. Trial/construct units and target units are reported separately so a
+failed trial is not erased by a later successful retry.
+
+This is deliberately not connected to the demonstrator score. Before any
+TargetTrack-derived supervised model is trained, raw mappings must be reviewed,
+the descriptive funnel must pass audit, and labels must exclude unknown,
+nontechnical and contradictory outcomes. Details are in
+[targettrack_wetlab_failure_funnel.md](targettrack_wetlab_failure_funnel.md).
+
+The current local TargetTrack snapshot run has a complete mapped status
+inventory, but no explicit technical terminal-failure labels in the parsed
+history. Its \`work stopped\` records remain unknown outcomes, so the source
+supports descriptive progression and taxonomy work only—not a supervised
+failure model or resolved-outcome probability estimate.
 
 ## Planned extensions
 
 The next technical steps are:
 
 - fixed feature and configuration schemas;
-- structure-derived descriptors;
-- condition-specific inputs;
+- benchmark data schemas with assay condition metadata;
+- protein language-model embeddings where benchmark evidence supports them;
+- structure-derived descriptors and confidence metrics where justified;
+- condition-specific inputs for pH, temperature, concentration, buffer, storage, and stress context;
+- stable and failed anchors in embedding space;
+- learned physical-risk directions and danger-zone rules;
 - experimentally annotated benchmark datasets;
 - uncertainty estimates;
 - applicability-domain detection;
+- active-learning logic for selecting the next wet-lab panel;
+- frozen prediction and evidence registry;
 - blinded prospective validation.
 
 ## Design rules

@@ -1,0 +1,16 @@
+target_id,trial_id,construct_id,event_timestamp,raw_status,raw_stop_status,raw_stop_detail,sequence
+T-001,A,C-001,2014-01-01,selected,,,MSTNPKPQRITF
+T-001,A,C-001,2014-01-02,cloned,,,MSTNPKPQRITF
+T-001,A,C-001,2014-01-03,purified,,,MSTNPKPQRITF
+T-002,A,C-002,2014-02-01,selected,,,MAGDVEKGKKIF
+T-002,A,C-002,2014-02-02,cloned,,,MAGDVEKGKKIF
+T-002,A,C-002,2014-02-03,,expression failed,,MAGDVEKGKKIF
+T-003,A,C-003,2014-03-01,selected,,,MKKLLFAIPLVV
+T-003,A,C-003,2014-03-02,cloned,,,MKKLLFAIPLVV
+T-003,A,C-003,2014-03-03,expressed,,,MKKLLFAIPLVV
+T-003,A,C-003,2014-03-04,soluble,,,MKKLLFAIPLVV
+T-003,A,C-003,2014-03-05,purified,,,MKKLLFAIPLVV
+T-003,A,C-003,2014-03-06,,crystallization failed,,MKKLLFAIPLVV
+T-004,A,C-004,2014-04-01,selected,,,MNNIRKILFL
+T-004,A,C-004,2014-04-02,cloned,,,MNNIRKILFL
+T-004,A,C-004,2014-04-03,,work stopped,,MNNIRKILFL

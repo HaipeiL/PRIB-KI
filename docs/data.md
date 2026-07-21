@@ -85,6 +85,24 @@ exclusion_rules
 split_method
 ```
 
+## TargetTrack historical workflow
+
+TargetTrack is an optional historical source for PRIB's wet-lab failure-funnel
+framework, not a replacement for endpoint-specific partner data. Its raw
+archive is downloaded locally from its Zenodo DOI, verified against the
+published MD5, and excluded from Git. The code, configuration, synthetic
+fixtures and aggregate reporting workflow are public; raw and row-level
+derived records remain local by default.
+
+The workflow retains only fields required to audit stage and stop
+classification. Public outputs must exclude personal contact fields and
+unreviewed free text. The official documentation and complete local
+raw-status inventory have been inspected, and the software map covers the
+observed values. Its biological interpretation remains subject to scientific
+review before any training or performance claim. See [the workflow
+note](targettrack_wetlab_failure_funnel.md) and [the third-party data
+notice](../THIRD_PARTY_DATA.md).
+
 ## Intended use
 
 The current dataset supports:

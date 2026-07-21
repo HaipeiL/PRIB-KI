@@ -1,0 +1,28 @@
+{
+  "dataset": {
+    "name": "TargetTrack 2000-2017",
+    "doi": "10.5281/zenodo.821654",
+    "license": "CC-BY-SA-4.0",
+    "archive_name": "TargetTrack-1Jul2017.tar.gz",
+    "download_url": "https://zenodo.org/records/821654/files/TargetTrack-1Jul2017.tar.gz?download=1",
+    "expected_md5": "200012a8a2a11ffd7e370ed142df36c3"
+  },
+  "paths": {
+    "raw_dir": "data/raw/targettrack",
+    "interim_dir": "data/interim/targettrack",
+    "processed_dir": "data/processed/targettrack",
+    "report_dir": "reports/targettrack"
+  },
+  "funnel": {
+    "min_stratum_at_risk": 100,
+    "include_inferred_prerequisites": true,
+    "publish_observed_only_funnel": true,
+    "beta_prior_alpha": 0.5,
+    "beta_prior_beta": 0.5
+  },
+  "quality": {
+    "fail_on_unmapped_status": true,
+    "fail_on_checksum_mismatch": true,
+    "fail_on_duplicate_event_id": true
+  }
+}

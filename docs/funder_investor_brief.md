@@ -17,6 +17,55 @@ This document is a concise diligence guide for government grant reviewers, unive
 | Current evidence | Workflow demonstrator, deterministic demo dataset, documented method boundaries |
 | Next evidence step | Endpoint-specific benchmarks and prospective wet-lab validation |
 
+The long-term company vision is documented separately in [`long_term_vision.md`](long_term_vision.md). This brief focuses on the near-term diligence case, evidence plan, and technical risk reduction.
+
+## Team execution evidence
+
+The team has prior hands-on experience with the upstream AI protein-design workflow that PRIB-KI is designed to complement. In the GEM x Adaptyv RBX1 Binder Design Competition linked to the ICLR 2026 GEM Workshop, the team used Proteina-Complexa, BindCraft, and reliability-oriented candidate triage. Seven of 21 submitted candidates advanced to wet-lab testing, corresponding to approximately the top 2.5% of more than 12,000 global submissions by external selection performance.
+
+The campaign did not ultimately produce a confirmed functional binder. For diligence, that distinction is important: the case demonstrates execution across the AI-to-lab path and exposes the reliability gap PRIB-KI is designed to address, but it is not validation of the current PRIB-KI model.
+
+```text
+RBX1 target preparation
+    -> Proteina-Complexa / BindCraft design workflow
+    -> candidate filtering
+    -> external selection
+    -> wet-lab testing
+    -> negative binder endpoint
+```
+
+The case is documented in [`protein_design_execution_case.md`](protein_design_execution_case.md).
+
+## AI positioning
+
+PRIB-KI is best understood as a **physical-AI reliability layer** for drug x AI and AI for life science workflows. It is not another model for generating proteins. It is a decision-support layer after generation and before wet-lab spend:
+
+```text
+AI-generated or discovered candidate library
+        -> PRIB-KI reliability triage
+        -> selected wet-lab validation panel
+        -> assay feedback for calibration
+```
+
+This positioning is useful for reviewers because it makes the AI claim narrow and testable:
+
+| AI theme | PRIB-KI interpretation |
+|---|---|
+| Drug x AI | Reduces candidate-selection friction before developability and formulation experiments. |
+| Physical AI | Combines learned representations with protein failure mechanisms such as aggregation, instability, self-interaction, viscosity, chemical liability, and scale-up sensitivity. |
+| AI for life science | Builds a design-test-learn loop from sequence and structure signals to measured assay endpoints. |
+
+## AI technical stack
+
+The AI stack is intentionally focused, not a broad collection of buzzwords.
+
+| System | What it builds | Core methods |
+|---|---|---|
+| **A. Protein physical reliability landscape** | A map of where candidates sit in AI protein space and which physical danger zones they approach | Protein language-model embeddings, structure/condition augmentation, risk-direction learning, failure-anchor retrieval, calibrated danger-zone rules |
+| **B. Lab-in-the-loop physical AI autopilot** | A closed loop that selects experiments, records frozen evidence, and updates the reliability map | Active learning, Bayesian experimental design, model calibration, uncertainty updates, assay-planning agents, ELN/LIMS/robot connectors |
+
+The full architecture is documented in [`ai_framework.md`](ai_framework.md).
+
 ## Problem
 
 AI-enabled protein design is accelerating candidate generation. Wet-lab validation capacity, however, remains expensive, slow, and limited. Many candidates can look plausible by sequence, structure, or generation score, yet later fail because of aggregation, poor expression, instability, conformational lability, formulation sensitivity, or scale-up stress.
@@ -59,6 +108,17 @@ PRIB-KI is not positioned as another protein design engine. Its differentiation 
 
 The project is grounded in protein biophysics, single-molecule failure logic, physical modeling, and decision-oriented software workflow.
 
+## Unavoidable questions PRIB-KI addresses
+
+The platform is designed around questions that become more important as generative biology scales:
+
+- Which generated candidates are close to known physical failure regions?
+- Which apparent winners are outside the model's validated domain?
+- Which assay would most reduce uncertainty for the current portfolio?
+- Which candidates should be retained, reviewed, or deprioritized before expensive validation?
+- Did frozen predictions actually enrich experimental failures in a prospective study?
+- Can the organization learn from every candidate panel instead of treating each experiment as an isolated event?
+
 ## Current technical status
 
 Implemented in the public repository:
@@ -97,14 +157,38 @@ PRIB-KI should be evaluated using the following evidence ladder:
 5. **Prospective validation**  
    Freeze code, configuration, and thresholds before wet-lab results are known; then test whether high-risk candidates are enriched for experimental problems.
 
+## Metrics that matter
+
+PRIB-KI should be evaluated by evidence and operating metrics, not by model complexity alone.
+
+| Category | Example metrics |
+|---|---|
+| Technical signal | top-k enrichment of experimental failures, ROC-AUC/PR-AUC for binary endpoints, Spearman correlation for continuous endpoints |
+| Baseline advantage | improvement over length, pI, charge, GRAVY, hydrophobicity, linear scores, and regularized baselines |
+| Reliability | calibration error, conformal coverage, out-of-domain detection, false-negative review |
+| Lab value | reduction in low-value screening, fewer weak candidates entering validation panels, faster candidate-to-report turnaround |
+| Enterprise readiness | traceability to input data, model version, configuration, assay condition, and evidence registry |
+
 ## Proposed 12-month de-risking plan
 
 | Period | Milestone | Diligence value |
 |---|---|---|
 | Months 1-3 | Reproducible build, tests, schemas, output provenance | Confirms engineering reliability |
-| Months 3-6 | Endpoint-specific public benchmarks and baselines | Tests scientific signal beyond simple descriptors |
-| Months 6-9 | Wet-lab partner and frozen prospective panel | Converts prototype into evidence-generating system |
-| Months 9-12 | Prospective report, calibration, pilot package | Supports grant continuation, seed readiness, or paid pilots |
+| Months 3-6 | Endpoint-specific public benchmarks, baselines, and first protein embedding landscape | Tests whether AI representation adds signal beyond simple descriptors |
+| Months 6-9 | Wet-lab partner and frozen prospective panel | Tests whether risk ranking enriches real failures |
+| Months 9-12 | Prospective report, calibration update, pilot package | Converts prototype into a repeatable evidence system |
+
+## Technical route
+
+The technical route is not to add deep learning complexity immediately. It is to earn each layer:
+
+1. lock the transparent sequence-only demonstrator;
+2. build endpoint-specific benchmark datasets and leakage-aware splits;
+3. build the protein physical reliability landscape using protein language-model embeddings, structure/condition augmentation, and failure anchors;
+4. learn physical-risk directions and danger-zone rules against measured endpoints;
+5. freeze predictions for prospective wet-lab validation;
+6. add lab-in-the-loop experiment selection, calibration, and evidence registry;
+7. package the validated workflow as API, reports, partner configuration, and automation connectors.
 
 ## Commercialization path
 
@@ -127,9 +211,11 @@ The likely commercialization sequence is:
 Potential defensibility should come from:
 
 - curated benchmark and validation datasets;
-- experimentally linked failure-mode modules;
+- experimentally linked failure anchors and physical-risk landscapes;
 - versioned scoring configurations;
 - partner-specific feedback loops;
+- frozen prediction and evidence registries;
+- integration into assay planning, ELN/LIMS, and robot/CRO workflows;
 - domain expertise in protein mechanics and biophysical failure;
 - practical integration into wet-lab decision workflows.
 
@@ -151,6 +237,9 @@ The public repository is a demonstrator and transparency layer. Proprietary part
 Reviewers can inspect:
 
 - [`README.md`](../README.md) for the project overview;
+- [`long_term_vision.md`](long_term_vision.md) for the company-level vision;
+- [`protein_design_execution_case.md`](protein_design_execution_case.md) for prior AI-to-lab execution evidence;
+- [`ai_framework.md`](ai_framework.md) for AI positioning and the technical route;
 - [`risk_engine.py`](../risk_engine.py) for implemented scoring logic;
 - [`app.py`](../app.py) for the user-facing workflow;
 - [`docs/methodology.md`](methodology.md) for scientific assumptions;

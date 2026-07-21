@@ -1,0 +1,15 @@
+# Local TargetTrack source and derivative data are intentionally not versioned.
+# Keep code, synthetic fixtures, configurations, and documentation in Git.
+data/raw/targettrack/*
+!data/raw/targettrack/.gitkeep
+data/interim/targettrack/*
+!data/interim/targettrack/.gitkeep
+data/processed/targettrack/*
+!data/processed/targettrack/.gitkeep
+reports/targettrack/*
+!reports/targettrack/.gitkeep
+
+# Local Python artifacts
+__pycache__/
+*.py[cod]
+.pytest_cache/

@@ -30,6 +30,12 @@ A result should be traceable to:
 
 Does the PRIB-KI ranking enrich experimentally poor candidates at the high-risk end of the distribution?
 
+For the AI route, the benchmark must also answer a second question:
+
+```text
+Does the protein physical reliability landscape add signal beyond simple physicochemical descriptors?
+```
+
 ### Candidate endpoints
 
 Benchmarks should be endpoint-specific. Suitable endpoints include:
@@ -80,6 +86,16 @@ At minimum, compare against:
 
 A more complex model should only be retained if it improves performance under the same split and evaluation procedure.
 
+### AI landscape validation
+
+When protein language-model embeddings or structure-derived features are introduced, validation should report:
+
+- whether embedding-based models improve over descriptor-only baselines;
+- whether stable and failed anchors separate under leakage-aware splits;
+- whether learned physical-risk directions are consistent across folds;
+- whether danger-zone thresholds remain calibrated on held-out data;
+- whether out-of-domain candidates are correctly flagged rather than over-scored.
+
 ### Metrics
 
 For continuous endpoints:
@@ -122,6 +138,24 @@ A practical first study would use 30–50 candidates and at least two orthogonal
 - aggregation onset or turbidity;
 - one self-interaction or solubility assay.
 
+Prospective validation should report top-risk enrichment, false-negative failures, calibration drift, and whether the next recommended assay would have reduced uncertainty.
+
+### TargetTrack retrospective controls
+
+TargetTrack can support historical progression priors and failure-taxonomy
+development, but it is not a performance-validation dataset for the current
+PRIB-KI demonstrator. Analyses must retain observed versus inferred stages,
+report trial and target levels separately, flag contradictions, and show
+technical, nontechnical, unknown and censored outcomes in every transition
+denominator. Any future transition classifier may train only on explicit
+advancement and explicit technical failure at that transition, with
+sequence-family or target-family leakage controls.
+
+If a source snapshot has no explicit technical terminal-failure labels, as in
+the current local TargetTrack run, resolved-outcome probabilities and
+beta-binomial estimates must be suppressed rather than inferred from
+\`work stopped\` records.
+
 ## 4. Sensitivity analysis
 
 The following checks are required for each scoring release:
@@ -152,3 +186,5 @@ Out-of-domain candidates should be flagged for review rather than assigned an ov
 The current repository demonstrates workflow execution and controlled descriptor stratification.
 
 The synthetic stress variants in the demo dataset are software test cases. They are not experimentally failed proteins and must not be used to report predictive accuracy.
+
+The prior RBX1 AI design-to-lab competition case is useful team execution evidence. It should not be used as PRIB-KI model validation unless predictions, candidate selection criteria, assay endpoints, and readouts were frozen and documented before wet-lab results were known.

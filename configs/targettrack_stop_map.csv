@@ -1,0 +1,19 @@
+raw_stop_status,raw_stop_detail_pattern,stop_class,failure_code,failed_at_stage,classification_confidence,rule_type,review_required
+cloning failed,,technical_failure,cloning_failed,selected_to_cloned,provisional,normalized exact,true
+cloning_failed,,technical_failure,cloning_failed,selected_to_cloned,provisional,normalized exact,true
+expression failed,,technical_failure,expression_failed,cloned_to_expressed,provisional,normalized exact,true
+expression_failed,,technical_failure,expression_failed,cloned_to_expressed,provisional,normalized exact,true
+solubility failed,,technical_failure,solubility_failed,expressed_to_soluble,provisional,normalized exact,true
+solubility_failed,,technical_failure,solubility_failed,expressed_to_soluble,provisional,normalized exact,true
+purification failed,,technical_failure,purification_failed,soluble_to_purified,provisional,normalized exact,true
+purification_failed,,technical_failure,purification_failed,soluble_to_purified,provisional,normalized exact,true
+crystallization failed,,technical_failure,crystallization_failed,purified_to_crystallized,provisional,normalized exact,true
+crystallization_failed,,technical_failure,crystallization_failed,purified_to_crystallized,provisional,normalized exact,true
+poor diffraction,,technical_failure,poor_diffraction,crystallized_to_diffraction_quality,provisional,normalized exact,true
+poor_diffraction,,technical_failure,poor_diffraction,crystallized_to_diffraction_quality,provisional,normalized exact,true
+duplicate target,,nontechnical_stop,duplicate_target,,provisional,normalized exact,true
+duplicate_target,,nontechnical_stop,duplicate_target,,provisional,normalized exact,true
+structure already available,,nontechnical_stop,structure_already_available,,provisional,normalized exact,true
+alternative construct selected,,nontechnical_stop,alternative_construct_selected,,provisional,normalized exact,true
+work stopped,,unknown_stop,work_stopped_no_reason,,provisional,normalized exact,true
+work_stopped,,unknown_stop,work_stopped_no_reason,,provisional,normalized exact,true

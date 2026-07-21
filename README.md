@@ -4,11 +4,11 @@
 
 # PRIB-KI
 
-**Physical reliability screening for AI-designed proteins.**
+**Physical-AI reliability screening for AI-designed proteins.**
 
 PRIB-KI is a research prototype for early-stage protein candidate triage. It helps protein design, biotech, pharma, and enzyme-engineering teams decide which candidates deserve wet-lab budget before fragile designs consume expression, formulation, stability, or scale-up experiments.
 
-[Live demonstrator](https://prib-ki.streamlit.app/) | [Intro video](https://youtu.be/2hRn8kXBsRI) | [Methodology](docs/methodology.md) | [Validation plan](docs/validation.md) | [Roadmap](docs/roadmap.md) | [Funder and investor brief](docs/funder_investor_brief.md) | [Repository review guide](docs/repository_review_guide.md)
+[Live demonstrator](https://prib-ki.streamlit.app/) | [Intro video](https://youtu.be/2hRn8kXBsRI) | [Long-term vision](docs/long_term_vision.md) | [Execution case](docs/protein_design_execution_case.md) | [AI framework](docs/ai_framework.md) | [TargetTrack foundation](docs/targettrack_wetlab_failure_funnel.md) | [Methodology](docs/methodology.md) | [Validation plan](docs/validation.md) | [Roadmap](docs/roadmap.md) | [Funder and investor brief](docs/funder_investor_brief.md) | [Repository review guide](docs/repository_review_guide.md)
 
 ---
 
@@ -36,6 +36,33 @@ AI protein design / candidate libraries
 ```
 
 The current public release focuses on sequence-derived descriptors and interpretable risk signals. It is designed to demonstrate workflow feasibility, transparent assumptions, and a path toward experimental validation.
+
+## Long-term vision
+
+The company-level vision is documented in [`docs/long_term_vision.md`](docs/long_term_vision.md). In short, PRIB-KI is built on the judgement that AI protein engineering is moving from a generation bottleneck to a reliability bottleneck.
+
+The long-term route has two parts: build a **protein physical reliability landscape**, then use **lab-in-the-loop physical AI** to navigate and update that landscape through wet-lab evidence.
+
+The team has documented prior AI-to-lab execution in the GEM x Adaptyv RBX1 Binder Design Competition, where 7 of 21 submitted candidates advanced to wet-lab testing, corresponding to approximately the top 2.5% of more than 12,000 global submissions. No confirmed binder was ultimately obtained, which reinforces PRIB-KI's focus on post-generation reliability screening. See [`docs/protein_design_execution_case.md`](docs/protein_design_execution_case.md).
+
+## AI framework in one view
+
+PRIB-KI should be read as an **AI for life science** project with a narrow, testable role in the drug x AI workflow:
+
+```text
+generative protein AI / discovery libraries
+        -> physical-AI reliability screen
+        -> wet-lab assay planning
+        -> experimental feedback and calibration
+```
+
+The platform is designed around three connected AI ideas:
+
+- **Drug x AI:** PRIB-KI supports therapeutic-protein, antibody, enzyme, and engineered-binder teams at the candidate-selection step before expensive developability experiments.
+- **Physical AI:** PRIB-KI combines learned representations with biophysical failure logic, so aggregation, instability, self-interaction, viscosity, chemical liability, formulation stress, and scale-up sensitivity remain interpretable.
+- **AI for life science:** PRIB-KI is intended to become a design-test-learn layer that links sequence, structure, foundation-model features, assay endpoints, and partner feedback.
+
+See [`docs/ai_framework.md`](docs/ai_framework.md) for the AI architecture and technical route.
 
 ## What the prototype does
 
@@ -76,10 +103,10 @@ Scores in this release are **relative screening indices** for research prototypi
 | Layer | Implemented now | Planned next |
 |---|---|---|
 | Input | Sequence CSV with `id` and `sequence` | Condition metadata, protein-class metadata, partner-specific manifests |
-| Representation | Length, MW, pI, charge, GRAVY, hydrophobicity, motif proxies | Structure-derived descriptors and applicability-domain checks |
-| Risk logic | Interpretable heuristic features and AI-weighted pseudo-target mapping for demo use | Endpoint-specific calibration against experimental data |
-| Output | Risk axes, overall ranking, effort proxy, accept/review/reject exports | Audit-ready reports, API output, uncertainty estimates |
-| Validation | Workflow execution and deterministic demo dataset | Retrospective benchmarks and blinded prospective wet-lab panel |
+| Representation | Length, MW, pI, charge, GRAVY, hydrophobicity, motif proxies | Protein language-model embeddings, structure-derived descriptors, perturbation metadata, and applicability-domain checks |
+| Risk logic | Interpretable heuristic features and AI-weighted pseudo-target mapping for demo use | Endpoint-specific calibration against experimental data with uncertainty estimates |
+| Output | Risk axes, overall ranking, effort proxy, accept/review/reject exports | Audit-ready reports, API output, assay suggestions, model-version traceability |
+| Validation | Workflow execution and deterministic demo dataset | Retrospective benchmarks, baseline comparisons, and blinded prospective wet-lab panel |
 
 The risk engine is implemented in [`risk_engine.py`](risk_engine.py). The web interface is implemented in [`app.py`](app.py).
 
@@ -96,6 +123,10 @@ The risk engine is implemented in [`risk_engine.py`](risk_engine.py). The web in
 │   └── demo_100.csv           # Demonstration dataset
 ├── docs/
 │   ├── methodology.md         # Scientific and computational assumptions
+│   ├── long_term_vision.md    # Company-level vision and two-route strategy
+│   ├── protein_design_execution_case.md
+│   │                           # Prior AI-to-lab execution case
+│   ├── ai_framework.md        # AI positioning, architecture, and technical route
 │   ├── validation.md          # Benchmark and prospective validation plan
 │   ├── roadmap.md             # Technical de-risking milestones
 │   ├── data.md                # Data provenance and usage limits
@@ -120,6 +151,23 @@ perturbation
 The current sequence-only implementation approximates early risk signals such as hydrophobic patch tendency, near-neutral charge behavior, chemical-liability motifs, and simple processability proxies. These signals are useful for demonstrator-level triage and hypothesis generation, but they are not direct substitutes for endpoint-specific experimental assays.
 
 The next scientific step is to connect risk modules to measured endpoints such as expression yield, SEC monomer percentage, nanoDSF/DSF stability, aggregation onset, solubility, self-interaction, or viscosity.
+
+## TargetTrack historical-data foundation
+
+The repository now contains a data-governed, CPU-only foundation for analysing
+the historical TargetTrack structural-genomics archive. A locally verified
+2017 source-snapshot run exercises its XML parser and complete status map; raw
+archives and derived row-level records remain ignored by Git. The code adds an
+explicit failure taxonomy, trial/construct and target-level funnels,
+censoring-aware progression reporting, reproducible source verification, and
+synthetic tests.
+
+This work does not alter the Streamlit demonstrator or its rankings. It is an
+independent retrospective evidence layer: TargetTrack stopped records are not
+automatically molecular failures, and resulting values must be described as
+historical structural-genomics priors rather than industrial success
+probabilities. See [the TargetTrack workflow](docs/targettrack_wetlab_failure_funnel.md)
+and [the attribution notice](THIRD_PARTY_DATA.md).
 
 ## Demo data
 
@@ -179,13 +227,15 @@ See [`docs/validation.md`](docs/validation.md) for the evaluation protocol.
 
 ## Development roadmap
 
-The roadmap is organized around technical and translational risk reduction:
+The roadmap is organized around technical and translational risk reduction, with explicit metrics for whether the AI route is working:
 
 - `v0.2` reproducible demo and basic tests;
 - `v0.3` endpoint-specific benchmark build;
-- `v0.4` calibrated research prototype;
-- `v0.5` prospective validation;
-- `v0.6` pilot integration with API and audit-ready reports.
+- `v0.4` protein embedding landscape and calibrated physical-risk directions;
+- `v0.5` prospective validation with frozen predictions;
+- `v0.6` lab-in-the-loop pilot integration with API, evidence registry, and assay recommendations.
+
+Target evidence metrics include reproducible rankings, top-risk enrichment for experimental failures, improvement over physicochemical baselines, calibration quality, out-of-domain detection, and reduction of low-value wet-lab screening effort in partner panels.
 
 See [`docs/roadmap.md`](docs/roadmap.md).
 
