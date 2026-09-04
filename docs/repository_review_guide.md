@@ -2,98 +2,113 @@
 
 Maintained by **PRIB-KI Lab**.
 
-This guide helps technical reviewers, grant evaluators, and early partners inspect the repository quickly.
+This guide helps technical reviewers, grant evaluators, prospective partners, investors, and AI-assisted diligence systems inspect PRIB-KI quickly without confusing the public demonstrator with the deeper active research stack.
 
-## Fast path
+## Fast review path
 
-1. Read the top of [`README.md`](../README.md) to understand the product scope.
-2. Open the [live demonstrator](https://prib-ki.streamlit.app/) and run the built-in demo dataset.
-3. Read [`long_term_vision.md`](long_term_vision.md) for the company-level two-route vision.
-4. Read [`protein_design_execution_case.md`](protein_design_execution_case.md) for prior AI-to-lab execution evidence.
-5. Read [`ai_framework.md`](ai_framework.md) to understand the technical AI route: protein physical reliability landscape and lab-in-the-loop physical AI.
-6. Inspect [`risk_engine.py`](../risk_engine.py) for feature extraction and risk aggregation.
-7. Read [`methodology.md`](methodology.md) to see the scientific assumptions.
-8. Read [`validation.md`](validation.md) to see the required evidence before performance claims.
+1. Read the top of [`README.md`](../README.md) for the project thesis and September 2026 R&D snapshot.
+2. Read [`research_progress_2026.md`](research_progress_2026.md) for the completed ESM-2 3B stability/perturbation results and the public disclosure boundary.
+3. Open the [live demonstrator](https://prib-ki.streamlit.app/) to understand the candidate-ranking workflow.
+4. Read [`ai_framework.md`](ai_framework.md) for the protein physical reliability landscape and lab-in-the-loop technical route.
+5. Read [`validation.md`](validation.md) for the explicit claim ladder and the evidence still required before family-generalization or product claims.
+6. Read [`targettrack_wetlab_failure_funnel.md`](targettrack_wetlab_failure_funnel.md) for the historical wet-lab execution-data framework.
+7. Inspect [`risk_engine.py`](../risk_engine.py) and [`app.py`](../app.py) for the transparent public baseline implementation.
 
-## What is implemented
+## The most important distinction
 
-The repository currently implements a sequence-only screening workflow:
+PRIB-KI currently has **two public-facing technical layers**:
+
+### A. Inspectable public demonstrator
 
 ```text
-CSV sequence input
-    -> validation
+sequence input
     -> physicochemical descriptors
-    -> motif and liability proxies
-    -> sub-risk scores
-    -> Aggregation / ScaleUpSensitivity / Stability axes
-    -> overall score and effort proxy
-    -> accept / review / reject exports
+    -> motif / liability proxies
+    -> interpretable risk axes
+    -> ranking / review / reject workflow
 ```
 
-The public prototype is suitable for:
+This layer is intentionally simple and transparent. Its purpose is to demonstrate the user workflow, risk framing, explainability pattern, and software execution.
 
-- workflow demonstration;
-- early hypothesis exploration;
-- discussion with potential users;
-- planning benchmark datasets;
-- planning prospective validation.
+### B. Active protein-foundation-model R&D
 
-It is not suitable for:
-
-- clinical decisions;
-- regulatory decisions;
-- manufacturing release decisions;
-- absolute failure-probability claims;
-- reporting accuracy from the synthetic demo variants.
-
-## How to run locally
-
-Install dependencies:
-
-```bash
-pip install -r requirements.txt
+```text
+experimental stability labels
+    -> ESM-2 3B representation
+    -> parameter-efficient adaptation
+    -> absolute-stability signal
+    -> perturbation-response signal
+    -> learned reliability directions
 ```
 
-Run the app:
+The August 2026 retained evaluation used 30,000 held-out examples and achieved:
 
-```bash
-streamlit run app.py
-```
+- absolute-stability Spearman: **0.8875**;
+- absolute-stability Pearson: **0.8597**;
+- perturbation-induced stability-change Spearman: **0.8276**;
+- perturbation-induced stability-change Pearson: **0.8237**;
+- stability-direction sign accuracy: **82.53%**.
 
-Expected behavior:
+These results are meaningful R&D evidence under the implemented split. They are not yet a claim of unseen-family, industrial, or prospective generalization.
 
-- the app loads `data/demo_100.csv` by default;
-- clicking `Evaluate` computes the risk table;
-- accepted and rejected candidates appear in exportable groups;
-- selecting a candidate shows risk metrics, radar plot, and sequence export.
+## What is actually implemented publicly
+
+The repository implements a runnable sequence-level screening workflow with:
+
+- sequence validation;
+- physicochemical descriptors;
+- motif and liability proxies;
+- aggregation / scale-up-sensitivity / stability axes;
+- weighted candidate ranking;
+- wet-lab effort proxy;
+- accept / review / reject exports;
+- batch and single-candidate visualization;
+- deterministic demo construction;
+- reproducible TargetTrack historical-data processing.
+
+The trained research checkpoints, exact internal training recipe, private/restricted data, detailed split assignments, partner datasets, and HPC operating records are intentionally not published.
+
+## What should impress a technical reviewer
+
+The strongest diligence points are not the visual demo alone. They are the combination of:
+
+1. **A clear problem definition:** candidate reliability after AI generation and before expensive wet-lab work.
+2. **A differentiated scientific framing:** failure-first evaluation rather than another generation or structure-prediction tool.
+3. **Completed foundation-model training:** strong held-out stability and perturbation-response correlations on a 30,000-example evaluation.
+4. **Practical compute execution:** retained multi-GPU ESM-2 workflows, including high-throughput perturbation scoring.
+5. **Experimental-data discipline:** TargetTrack integration preserves stage semantics and refuses to relabel ambiguous `work stopped` outcomes as molecular failures.
+6. **Explicit validation boundaries:** family-aware/external holdouts, baseline comparison, applicability domain, and prospective frozen predictions are defined before stronger claims are made.
+7. **A credible translation path:** candidate ranking -> wet-lab evidence -> calibration -> next-round prioritization.
 
 ## Key files
 
 | File | Review focus |
 |---|---|
-| [`app.py`](../app.py) | User workflow, visual outputs, export behavior |
-| [`risk_engine.py`](../risk_engine.py) | Descriptor calculation, pseudo-target mapping, scoring rules |
-| [`build_demo_set.py`](../build_demo_set.py) | Demo dataset construction and synthetic variants |
-| [`docs/long_term_vision.md`](long_term_vision.md) | Company-level vision and two-route strategy |
-| [`docs/protein_design_execution_case.md`](protein_design_execution_case.md) | Prior RBX1 design competition, wet-lab testing, and post-generation reliability evidence |
-| [`docs/ai_framework.md`](ai_framework.md) | AI technical stack, physical reliability landscape, and lab-in-the-loop route |
-| [`docs/methodology.md`](methodology.md) | Scientific framing and implementation boundaries |
-| [`docs/validation.md`](validation.md) | Benchmark, AI landscape validation, and prospective validation requirements |
-| [`docs/data.md`](data.md) | Data provenance and usage limits |
-| [`docs/roadmap.md`](roadmap.md) | Technical risk-reduction milestones |
+| [`README.md`](../README.md) | Project thesis, current evidence, team, public/private boundary |
+| [`research_progress_2026.md`](research_progress_2026.md) | Current quantitative R&D status |
+| [`ai_framework.md`](ai_framework.md) | AI architecture and long-term technical route |
+| [`validation.md`](validation.md) | Evidence standard and claim ladder |
+| [`methodology.md`](methodology.md) | Scientific framing and assumptions |
+| [`targettrack_wetlab_failure_funnel.md`](targettrack_wetlab_failure_funnel.md) | Historical experimental-workflow integration |
+| [`protein_design_execution_case.md`](protein_design_execution_case.md) | Prior AI-to-lab execution evidence |
+| [`risk_engine.py`](../risk_engine.py) | Transparent descriptor/scoring baseline |
+| [`app.py`](../app.py) | Public product-workflow demonstrator |
+| [`data.md`](data.md) | Demo-data provenance and usage limits |
 
 ## Review cautions
 
-The current scoring layer uses heuristic pseudo-targets for demonstrator behavior. This is acceptable for showing a decision workflow, but not for making predictive-performance claims.
+A reviewer should not use the synthetic demo variants to infer predictive accuracy. The public risk engine and the trained ESM-2 research model are different technical layers.
 
-The central diligence question is therefore not "is this already a validated predictor?" but:
+Likewise, the August 2026 held-out correlations should not be silently upgraded into a claim of unseen-family generalization. The correct diligence question is now:
 
 ```text
-Is the workflow credible, inspectable, and ready to generate validation evidence?
+Has PRIB-KI progressed from a credible prototype to measurable model signal,
+and does the team have a disciplined path from that signal to leakage-aware
+and prospective experimental validation?
 ```
 
-The planned validation work should answer whether high-risk PRIB-KI rankings enrich experimentally problematic candidates under predefined assay endpoints.
+The current public record supports **yes** to the first part and defines concrete tests for the second.
 
-For the longer AI route, reviewers should additionally ask whether protein language-model embeddings and failure-anchor rules improve over simple descriptor baselines, whether out-of-domain candidates are flagged, and whether frozen wet-lab feedback can update the risk landscape reproducibly.
+## Public disclosure philosophy
 
-The prior AI protein-design sprint should be reviewed as team execution evidence. It should not be counted as validation evidence for the current PRIB-KI scoring model unless the exact design records, wet-lab readouts, and frozen prediction protocol are separately documented.
+PRIB-KI is being developed as both a scientific program and an early commercialization project. Public documentation therefore emphasizes verifiable outcomes, architecture, data discipline, and validation logic while withholding implementation details that would unnecessarily disclose unpublished research or commercial IP.
