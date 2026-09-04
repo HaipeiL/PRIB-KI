@@ -2,69 +2,87 @@
 
 Maintained by **PRIB-KI Lab**.
 
-This document defines the minimum validation work required before performance claims are made.
+This document defines how PRIB-KI distinguishes completed research evidence from stronger generalization, prospective, and product-validation claims.
 
-## 1. Software validation
+## 1. Current evidence status — September 2026
 
-The repository must pass the following checks:
+PRIB-KI now has two different validation layers that should not be conflated.
 
-- deterministic output for fixed input, seed, and configuration;
-- unit tests for descriptor calculations;
-- explicit handling of invalid sequences and missing values;
-- reproducible candidate ranking;
-- versioned configuration and output metadata;
-- no silent fallback when a feature cannot be calculated.
+### Public demonstrator
 
-A result should be traceable to:
+The public Streamlit scoring layer remains a transparent workflow demonstrator based on sequence-derived descriptors, motif/liability proxies, and AI-weighted pseudo-target mapping. Its synthetic stress variants are software test cases, not experimentally failed proteins, and must not be used to report predictive accuracy.
 
-- input dataset;
-- source code revision;
+### Protein foundation-model R&D
+
+In August 2026, PRIB-KI completed a parameter-efficient adaptation of ESM-2 3B using experimental protein-stability labels. On the implemented held-out split with 30,000 evaluation examples, the retained result achieved:
+
+| Target | Metric | Result |
+|---|---|---:|
+| Absolute stability | Spearman | **0.8875** |
+| Absolute stability | Pearson | **0.8597** |
+| Perturbation-induced stability change | Spearman | **0.8276** |
+| Perturbation-induced stability change | Pearson | **0.8237** |
+| Direction of stability change | Sign accuracy | **82.53%** |
+| Embedding displacement vs. magnitude of stability change | Spearman | **0.5136** |
+
+These are strong held-out results under the implemented split. They establish that the current research model learned substantial stability and perturbation-response signal. They do **not** yet establish generalization to unseen protein families, industrial conditions, or prospective partner panels.
+
+The next validation gates therefore focus on leakage-aware splitting, baseline comparison, applicability domain, and prospective testing rather than simply increasing model size.
+
+See [`research_progress_2026.md`](research_progress_2026.md) for the public technical summary.
+
+## 2. Software validation
+
+Every retained result should be traceable to:
+
+- input dataset and inclusion/exclusion rules;
+- source-code revision;
 - dependency environment;
-- scoring configuration;
+- model/scoring configuration;
 - random seed;
-- model or rule-set version.
+- model or rule-set version;
+- evaluation split definition.
 
-## 2. Retrospective benchmark
+The public repository should maintain deterministic output for fixed inputs and configuration, explicit invalid-sequence/missing-value handling, reproducible candidate ranking, and no silent fallback when a feature cannot be calculated.
+
+## 3. Retrospective benchmark standard
 
 ### Primary question
 
-Does the PRIB-KI ranking enrich experimentally poor candidates at the high-risk end of the distribution?
+For an endpoint-specific reliability model:
 
-For the AI route, the benchmark must also answer a second question:
-
-```text
-Does the protein physical reliability landscape add signal beyond simple physicochemical descriptors?
-```
+> Does the PRIB-KI model improve ranking of measured protein reliability or failure-related outcomes beyond simple baselines under a leakage-aware holdout?
 
 ### Candidate endpoints
 
-Benchmarks should be endpoint-specific. Suitable endpoints include:
+Benchmarks should remain endpoint-specific. Suitable endpoints include:
 
+- folding or thermodynamic stability;
+- perturbation-induced stability change;
 - expression yield;
 - SEC monomer percentage;
-- thermal stability;
 - aggregation propensity;
 - self-interaction;
 - viscosity;
 - solubility;
 - recovery after accelerated stress.
 
-Composite labels should only be introduced after the component endpoints are analyzed separately.
+Composite labels should only be introduced after component endpoints are understood separately.
 
 ### Dataset requirements
 
-A benchmark dataset must include:
+A benchmark dataset should include:
 
 - traceable protein identity or sequence;
-- defined assay endpoint;
-- assay conditions;
+- defined assay endpoint and unit;
+- assay conditions where available;
 - sufficient sample size;
-- documented inclusion and exclusion rules;
+- documented inclusion/exclusion rules;
 - compatible usage rights.
 
 ### Split strategy
 
-Random row-level splitting is not sufficient when related proteins are present. Depending on the dataset, use:
+Random row-level splitting is not sufficient when close sequence relatives or shared scaffolds can appear across splits. Depending on the dataset, use one or more of:
 
 - sequence-cluster split;
 - protein-family split;
@@ -72,119 +90,104 @@ Random row-level splitting is not sufficient when related proteins are present. 
 - temporal split;
 - external holdout set.
 
+The current August 2026 held-out result must therefore be treated as an important research milestone, not the final generalization claim.
+
 ### Baselines
 
-At minimum, compare against:
+At minimum compare against:
 
 - sequence length;
 - pI;
 - GRAVY;
 - net charge;
-- a hydrophobicity proxy;
+- hydrophobicity proxies;
 - an unweighted linear score;
 - a regularized linear model.
 
-A more complex model should only be retained if it improves performance under the same split and evaluation procedure.
-
-### AI landscape validation
-
-When protein language-model embeddings or structure-derived features are introduced, validation should report:
-
-- whether embedding-based models improve over descriptor-only baselines;
-- whether stable and failed anchors separate under leakage-aware splits;
-- whether learned physical-risk directions are consistent across folds;
-- whether danger-zone thresholds remain calibrated on held-out data;
-- whether out-of-domain candidates are correctly flagged rather than over-scored.
+More complex models should be retained only when they improve performance under the same split and evaluation procedure.
 
 ### Metrics
 
 For continuous endpoints:
 
 - Spearman correlation;
-- mean absolute error;
+- Pearson correlation where useful;
+- MAE / RMSE where scale is meaningful;
 - bootstrap confidence intervals.
 
-For binary or ordinal endpoints:
+For directional or binary endpoints:
 
+- sign / balanced accuracy;
 - ROC-AUC;
 - PR-AUC;
-- balanced accuracy;
-- sensitivity and specificity;
-- top-k enrichment.
+- sensitivity and specificity.
 
 For prioritization:
 
-- recall of experimentally poor candidates at a fixed screening fraction;
-- enrichment in the highest-risk decile or quartile;
+- recall of poor candidates at a fixed screening fraction;
+- top-k or highest-risk-decile enrichment;
 - rank correlation.
 
-## 3. Prospective validation
+## 4. Foundation-model landscape validation
+
+Protein-language-model work should additionally test:
+
+- improvement over descriptor-only baselines;
+- sequence/family leakage sensitivity;
+- stability of learned physical-risk directions across folds;
+- nearest-neighbor or embedding-distance applicability domain;
+- out-of-domain flagging rather than overconfident extrapolation;
+- whether embedding geometry adds information beyond the prediction head itself.
+
+The August result currently shows a stronger learned signal for stability **direction** than for exact embedding-displacement magnitude. That distinction should remain visible in future reporting.
+
+## 5. Prospective validation
 
 A prospective study should follow this sequence:
 
 1. select a new candidate panel;
-2. freeze the code revision, model, and thresholds;
+2. freeze code revision, model, thresholds, and configuration;
 3. generate predictions before wet-lab results are available;
-4. assign candidates to predefined risk groups;
+4. assign candidates to predefined groups or ranking positions;
 5. run predefined assays;
-6. compare predictions with results;
-7. record failed predictions and protocol deviations.
+6. compare frozen predictions with results;
+7. document incorrect predictions and protocol deviations;
+8. only then update the model.
 
-A practical first study would use 30–50 candidates and at least two orthogonal readouts, for example:
+A practical first study would use **30–50 candidates** and at least two orthogonal readouts, for example expression yield plus SEC monomer percentage or DSF/nanoDSF.
 
-- expression yield;
-- SEC monomer percentage;
-- nanoDSF or DSF;
-- aggregation onset or turbidity;
-- one self-interaction or solubility assay.
+Prospective validation should report top-risk enrichment, false-negative failures, calibration drift, and whether the recommended next assay would have reduced uncertainty.
 
-Prospective validation should report top-risk enrichment, false-negative failures, calibration drift, and whether the next recommended assay would have reduced uncertainty.
+## 6. TargetTrack retrospective controls
 
-### TargetTrack retrospective controls
+TargetTrack supports historical progression priors, data-engineering validation, and failure-taxonomy development, but it is not a direct performance-validation dataset for the public PRIB-KI scoring model.
 
-TargetTrack can support historical progression priors and failure-taxonomy
-development, but it is not a performance-validation dataset for the current
-PRIB-KI demonstrator. Analyses must retain observed versus inferred stages,
-report trial and target levels separately, flag contradictions, and show
-technical, nontechnical, unknown and censored outcomes in every transition
-denominator. Any future transition classifier may train only on explicit
-advancement and explicit technical failure at that transition, with
-sequence-family or target-family leakage controls.
+Analyses must retain observed versus inferred stages, report trial and target levels separately, flag contradictions, and distinguish technical, nontechnical, unknown, and censored outcomes.
 
-If a source snapshot has no explicit technical terminal-failure labels, as in
-the current local TargetTrack run, resolved-outcome probabilities and
-beta-binomial estimates must be suppressed rather than inferred from
-\`work stopped\` records.
+The current local TargetTrack snapshot contains terminal `work stopped` records without an explicit technical-failure category in the parsed status history. Those records must remain unknown rather than being silently converted into molecular failures.
 
-## 4. Sensitivity analysis
+## 7. Sensitivity and applicability domain
 
-The following checks are required for each scoring release:
+Each scoring release should include, where appropriate:
 
-- feature ablation;
-- weight sensitivity;
+- feature/model ablation;
 - threshold sensitivity;
-- alternative normalization methods;
+- alternative normalization or calibration checks;
 - protein-class-specific performance;
 - missing-feature robustness;
-- comparison of sequence-only and structure-augmented variants.
-
-## 5. Applicability domain
-
-Predictions should eventually report whether a candidate lies inside the validated domain. Relevant factors include:
-
-- sequence length;
-- protein class;
-- similarity to benchmark data;
-- descriptor-space distance;
-- missing context;
-- unusual composition or architecture.
+- comparison of sequence-only and structure-augmented variants;
+- similarity or embedding-distance based applicability-domain reporting.
 
 Out-of-domain candidates should be flagged for review rather than assigned an overconfident score.
 
-## 6. Current status
+## 8. Claim ladder
 
-The current repository demonstrates workflow execution and controlled descriptor stratification.
+PRIB-KI uses the following claim ladder:
 
-The synthetic stress variants in the demo dataset are software test cases. They are not experimentally failed proteins and must not be used to report predictive accuracy.
+1. **Workflow execution:** the pipeline runs reproducibly.
+2. **Held-out research signal:** the model predicts/ranks an endpoint on a defined holdout.
+3. **Leakage-aware generalization:** performance persists under sequence-family/scaffold/external holdouts.
+4. **Prospective evidence:** frozen predictions are confirmed on newly measured candidates.
+5. **Product evidence:** the workflow measurably improves experimental prioritization, cost, or cycle time in a partner setting.
 
-The prior RBX1 AI design-to-lab competition case is useful team execution evidence. It should not be used as PRIB-KI model validation unless predictions, candidate selection criteria, assay endpoints, and readouts were frozen and documented before wet-lab results were known.
+As of September 2026, the foundation-model stability work has reached **Level 2**, while the public sequence-only demonstrator remains primarily Level 1. The active R&D program is now focused on moving the strongest model evidence toward Levels 3 and 4.
